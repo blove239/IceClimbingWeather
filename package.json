@@ -1,0 +1,20 @@
+{
+  "name": "iceclimbingweather",
+  "version": "1.0.0",
+  "description": "A work in progress. Simple ice climbing weather tool that analyzes previous weather and provides an estimate on ice conditions for a particular area.",
+  "main": "index.js",
+  "scripts": {
+    "start": "snowpack dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blove239/IceClimbingWeather.git"
+  },
+  "author": "Brandon Love",
+  "license": "MIT",
+  "homepage": "https://github.com/blove239/IceClimbingWeather#readme",
+  "devDependencies": {
+    "snowpack": "^3.0.11"
+  }
+}
