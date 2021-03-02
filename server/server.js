@@ -1,16 +1,15 @@
 const express = require('express')
 const axios = require('axios')
 const morgan = require("morgan")
-const { response } = require('express')
-require('dotenv').config()
+const { DAY, OME_THOUSAND_MILLISECONDS, THREE_DAYS } = require('./constants')
 
-let DAY = 86400
+require('dotenv').config()
 
 const app = express()
 
 const PORT = process.env.port || 8002
 
-let currentUnixTime = Math.floor(Date.now() / 1000)
+let currentUnixTime = Math.floor(Date.now() / OME_THOUSAND_MILLISECONDS)
 
 app.use(
     morgan(
@@ -18,49 +17,53 @@ app.use(
     )
 )
 
-app.get('/api/hourlyweather/:lat-:lon', function(req, res) {
-    res.status(200).send({weather: concurrentRequests()})
+app.listen(PORT, () => {
+    console.log(`Network access via PORT: ${PORT}!`);
+});
+
+
+app.get('/api/weather/:lat-:lon', async function (req, res) {
+    console.log(req.params)
+    const data = await concurrentRequests(req.params.lat, req.params.lon)
+    res.status(200).json(data)
 })
 
-const concurrentRequests = () => {
-    let hourly = []
-    let one = `http://api.openweathermap.org/data/2.5/onecall/timemachine?lat=44.90&lon=-76.24&units=metric&dt=${currentUnixTime}&appid=${process.env.API_KEY}`
-    let two = `http://api.openweathermap.org/data/2.5/onecall/timemachine?lat=44.90&lon=-76.24&units=metric&dt=${currentUnixTime - (DAY * 1)}&appid=${process.env.API_KEY}`
-    let three = `http://api.openweathermap.org/data/2.5/onecall/timemachine?lat=44.90&lon=-76.24&units=metric&dt=${currentUnixTime - (DAY * 2)}&appid=${process.env.API_KEY}`
+const concurrentRequests = (lat, long) => {
+    return new Promise((res, rej) => {
+        let hourly = []
+        let requestList = []
+        for (let i = 0; i < THREE_DAYS; i++) {
+            let request = `http://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${lat}&lon=${long}&units=metric&dt=${currentUnixTime - (DAY * i)}&appid=${process.env.API_KEY}`
+            requestList.push(axios.get(request))
+        }
 
-    const requestOne = axios.get(one)
-    const requestTwo = axios.get(two)
-    const requestThree = axios.get(three)
+        axios.all(requestList).then(axios.spread((...responses) => {
 
-    axios.all([requestOne, requestTwo, requestThree]).then(axios.spread((...responses) => {
-        const responseOne = responses[0].data
-        const responseTwo = responses[1].data
-        const responseThree = responses[2].data
+            const responseOne = responses[0].data
+            const responseTwo = responses[1].data
+            const responseThree = responses[2].data
 
-        hourly = responseOne.hourly.concat(responseTwo.hourly).concat(responseThree.hourly)
+            hourly = responseOne.hourly.concat(responseTwo.hourly).concat(responseThree.hourly)
 
-        //dt === unix time formatted date time
-        hourly.sort((a, b) => (a.dt > b.dt) ? 1 : ((b.dt > a.dt) ? -1 : 0))
+            //dt === unix time formatted date time
+            hourly.sort((a, b) => (a.dt > b.dt) ? 1 : ((b.dt > a.dt) ? -1 : 0))
 
-        const transformedHourly = hourly.map(item => {
-            let unix_timestamp = item.dt
-            const date = new Date(unix_timestamp * 1000)
-            const month = date.getMonth() + 1
-            const day = date.getDate()
-            const hours = date.getHours()
-            const minutes = "0" + date.getMinutes()
+            const transformedHourly = hourly.map(item => {
+                let unix_timestamp = item.dt
+                const date = new Date(unix_timestamp * OME_THOUSAND_MILLISECONDS)
+                const month = date.getMonth() + 1
+                const day = date.getDate()
+                const hours = date.getHours()
+                const minutes = "0" + date.getMinutes()
 
-            return ({
-                date: month + '-' + day + '-' + hours + ':' + minutes.substr(-2),
-                temp: item.temp
+                return ({
+                    date: month + '-' + day + '-' + hours + ':' + minutes.substr(-2),
+                    temp: item.temp
+                })
             })
+            return res(transformedHourly)
+        })).catch(errors => {
+            rej(errors)
         })
-        console.log(transformedHourly)
-        return transformedHourly
-    })).catch(errors => {
-        console.log(errors)
-        // react on errors.
     })
 }
-
-concurrentRequests()

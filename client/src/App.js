@@ -1,6 +1,7 @@
 import { React, Children, useState, forwardRef } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown'
 import FormControl from 'react-bootstrap/FormControl'
+import Button from 'react-bootstrap/Button'
 import cityList from './cityList.json'
 import './App.css';
 
@@ -68,15 +69,17 @@ function App() {
           {cityList.map((city, index) => {
             return (
               <Dropdown.Item
+                key={index}
                 onSelect={handleSelect}
-                eventKey={city.lat + ',' + city.lon}>
+                eventKey={city.lat + ',' + city.lon}
+              >
                 {city.cityName + ', ' + city.country}
               </Dropdown.Item>
             )
           })}
         </Dropdown.Menu>
       </Dropdown>
-      <button> SUBMIT</button>
+    
     </div>
   );
 }
