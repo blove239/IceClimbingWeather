@@ -1,6 +1,8 @@
 const express = require('express')
 const axios = require('axios')
-const morgan = require("morgan")
+const morgan = require('morgan')
+const db = require('./db')
+
 const { DAY, OME_THOUSAND_MILLISECONDS, THREE_DAYS } = require('./constants')
 
 require('dotenv').config()
@@ -11,9 +13,10 @@ const PORT = process.env.port || 8002
 
 let currentUnixTime = Math.floor(Date.now() / OME_THOUSAND_MILLISECONDS)
 
+morgan.token("body", (req, res) => JSON.stringify(req.body))
 app.use(
     morgan(
-        ":method :url :status :response-time ms - :res[content-length]"
+        ":method :url :status :response-time ms - :res[content-length] :body - :req[content-length]"
     )
 )
 
@@ -21,11 +24,22 @@ app.listen(PORT, () => {
     console.log(`Network access via PORT: ${PORT}!`);
 });
 
+app.get('/api/city/:city', async function (req, res) {
+    // need to validate inputs
+    let data = await db.findCity(req.params.city)
+    res.status(200).send(data)
+})
 
 app.get('/api/weather/:lat-:lon', async function (req, res) {
-    console.log(req.params)
-    const data = await concurrentRequests(req.params.lat, req.params.lon)
-    res.status(200).json(data)
+    // need to validate inputs
+    try {
+        const data = await concurrentRequests(req.params.lat, req.params.lon)
+        res.status(200).json(data)
+    } catch(err) {
+        // expand on error so client can respond appropriately 
+        res.status(500)
+    }
+
 })
 
 const concurrentRequests = (lat, long) => {
