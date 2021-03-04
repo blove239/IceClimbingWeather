@@ -2,21 +2,22 @@ const express = require('express')
 const axios = require('axios')
 const morgan = require('morgan')
 const db = require('./db')
+const cors = require('cors')
+require('dotenv').config()
 
 const { DAY, OME_THOUSAND_MILLISECONDS, THREE_DAYS } = require('./constants')
 
-require('dotenv').config()
-
 const app = express()
+
+app.use(cors())
 
 const PORT = process.env.port || 8002
 
 let currentUnixTime = Math.floor(Date.now() / OME_THOUSAND_MILLISECONDS)
 
-morgan.token("body", (req, res) => JSON.stringify(req.body))
 app.use(
     morgan(
-        ":method :url :status :response-time ms - :res[content-length] :body - :req[content-length]"
+        ":method :url :status :response-time ms - :res[content-length]"
     )
 )
 

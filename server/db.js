@@ -15,18 +15,20 @@ if (fs.existsSync(DB_PATH)) {
 db.ensureIndex({ fieldName: 'city' }, function (err) {
 });
 
+// data access layer
 const dal = {}
 
 dal.findCity = (searchName) => {
     let re = new RegExp(`^${searchName}`, 'i')
     return new Promise((res, rej) => {
-        db.find({ city: re }, (err, docs) => {
+        db.find({ city: re }).sort({ population: -1 }).exec((err, docs) => {
             if (err) {
                 rej(err)
             } else {
+                docs = docs.slice(0,5)
                 docs.forEach(doc => {
                     delete doc._id
-                });
+                })
                 return res(docs)
             }
         })
