@@ -5,7 +5,7 @@ const db = require('./db')
 const cors = require('cors')
 require('dotenv').config()
 
-const { DAY, OME_THOUSAND_MILLISECONDS, THREE_DAYS } = require('./constants')
+const { DAY, ONE_THOUSAND_MILLISECONDS, THREE_DAYS } = require('./constants')
 
 const app = express()
 
@@ -13,7 +13,7 @@ app.use(cors())
 
 const PORT = process.env.port || 8002
 
-let currentUnixTime = Math.floor(Date.now() / OME_THOUSAND_MILLISECONDS)
+let currentUnixTime = Math.floor(Date.now() / ONE_THOUSAND_MILLISECONDS)
 
 app.use(
     morgan(
@@ -66,11 +66,11 @@ const concurrentRequests = (lat, long) => {
 
             const transformedHourly = hourly.map(item => {
                 let unix_timestamp = item.dt
-                const date = new Date(unix_timestamp * OME_THOUSAND_MILLISECONDS)
+                const date = new Date(unix_timestamp * ONE_THOUSAND_MILLISECONDS)
                 const month = date.getMonth() + 1
                 const day = date.getDate()
                 const hours = date.getHours()
-                const minutes = "0" + date.getMinutes()
+                const minutes = '0' + date.getMinutes()
                 return ({
                     date: month + '-' + day + ' ' + hours + ':' + minutes.substr(-2),
                     temp: item.temp

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import CurrentWeather from './Components/CurrentWeather'
+import Footer from './Components/Footer'
 import LineChart from './Components/LineChart'
 import Search from './Components/Search'
 import { Alert, Button, Col, Container, Jumbotron, Row } from 'react-bootstrap'
@@ -82,6 +83,7 @@ function App() {
           </Col>
         </Row>
       </Container>
+      <Footer/>
     </React.Fragment>
   )
 }
