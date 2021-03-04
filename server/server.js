@@ -40,7 +40,6 @@ app.get('/api/weather/:lat-:lon', async function (req, res) {
         // expand on error so client can respond appropriately 
         res.status(500)
     }
-
 })
 
 const concurrentRequests = (lat, long) => {
@@ -60,7 +59,7 @@ const concurrentRequests = (lat, long) => {
             const responseThree = responses[2].data
 
             hourly = responseOne.hourly.concat(responseTwo.hourly).concat(responseThree.hourly)
-            currentWeather = responseOne.current
+            current = responseOne.current
 
             //dt === unix time formatted date time
             hourly.sort((a, b) => (a.dt > b.dt) ? 1 : ((b.dt > a.dt) ? -1 : 0))
@@ -73,12 +72,12 @@ const concurrentRequests = (lat, long) => {
                 const hours = date.getHours()
                 const minutes = "0" + date.getMinutes()
                 return ({
-                    date: month + '-' + day + '-' + hours + ':' + minutes.substr(-2),
+                    date: month + '-' + day + ' ' + hours + ':' + minutes.substr(-2),
                     temp: item.temp
                 })
             })
             return res({
-                currentWeather: currentWeather,
+                current: current,
                 hourly: transformedHourly
             })
         })).catch(errors => {

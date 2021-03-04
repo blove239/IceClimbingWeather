@@ -16,11 +16,10 @@ const Search = ({setCityFromSearch}) => {
     return (
         <AsyncTypeahead
             id='city-search-field'
+            promptText='Enter city name...'
             isLoading={isLoading}
             useCache={false}
             filterBy={() => true}
-            searchText='Searching...'
-            promptText='Enter city name.'
             labelKey={option => `${option.city}, ${option.state}`}
             onChange={selected => {
                 setSelectedCity(selected[0])
