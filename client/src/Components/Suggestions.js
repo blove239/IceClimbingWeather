@@ -14,6 +14,7 @@ const Suggestions = ({ results, selectCityIndex }) => {
             action
             eventKey={i}
             key={i}
+            variant='primary'
             onClick={alertClicked}
         >
             {r.city}, {r.state}

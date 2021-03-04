@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
+import { Button, Col, Container, FormControl, InputGroup, Row } from 'react-bootstrap'
 import Suggestions from './Suggestions'
 import axios from 'axios'
 
 const API_URL = 'http://localhost:8002/api/city/'
 
-const Search = ({ citySelection }) => {
+const Search = ({ citySelection, getCityWeatherData }) => {
     const [query, setQuery] = useState('')
     const [results, setResults] = useState([])
 
@@ -15,35 +16,53 @@ const Search = ({ citySelection }) => {
             })
     }
 
-
-
     const selectCityIndex = (cityIndex) => {
         citySelection(results[cityIndex])
     }
+
     const handleInputChange = (e) => {
         setQuery(e.target.value)
     }
 
     useEffect(() => {
-        if (query.length > 2) {
+        if (query === '') {
+            setResults([])
+        } else {
             getInfo()
         }
     }, [query])
 
     return (
-        <div>
-            <form>
-                <input
-                    placeholder="Enter city name here..."
-                    onChange={handleInputChange}
-                />
-            </form>
+        <Container>
+            <Row className='justify-content-left'>
+                <Col md={4}                >
+                    <InputGroup className="mb-3">
+                        <FormControl
+                            placeholder="Enter City Name Here"
+                            aria-label="City Search Field"
+                            aria-describedby="basic-addon2"
+                            onChange={handleInputChange}
+                        />
+                        <InputGroup.Append>
+                            <Button
+                                variant="outline-secondary"
+                                onClick={getCityWeatherData}
+                            >
+                                Submit
+                            </Button>
+                        </InputGroup.Append>
+                    </InputGroup>
+                    <Suggestions
+                        selectCityIndex={selectCityIndex}
+                        results={results}
+                    />
+                </Col>
 
-            <Suggestions
-                selectCityIndex={selectCityIndex}
-                results={results}
-            />
-        </div>
+            </Row>
+
+
+        </Container>
+
     )
 }
 
