@@ -36,7 +36,7 @@ app.get('/api/weather/:lat-:lon', async function (req, res) {
     try {
         const data = await concurrentRequests(req.params.lat, req.params.lon)
         res.status(200).json(data)
-    } catch(err) {
+    } catch (err) {
         // expand on error so client can respond appropriately 
         res.status(500)
     }
@@ -46,6 +46,7 @@ app.get('/api/weather/:lat-:lon', async function (req, res) {
 const concurrentRequests = (lat, long) => {
     return new Promise((res, rej) => {
         let hourly = []
+        let currentWeather = []
         let requestList = []
         for (let i = 0; i < THREE_DAYS; i++) {
             let request = `http://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${lat}&lon=${long}&units=metric&dt=${currentUnixTime - (DAY * i)}&appid=${process.env.API_KEY}`
@@ -59,6 +60,7 @@ const concurrentRequests = (lat, long) => {
             const responseThree = responses[2].data
 
             hourly = responseOne.hourly.concat(responseTwo.hourly).concat(responseThree.hourly)
+            currentWeather = responseOne.current
 
             //dt === unix time formatted date time
             hourly.sort((a, b) => (a.dt > b.dt) ? 1 : ((b.dt > a.dt) ? -1 : 0))
@@ -70,13 +72,15 @@ const concurrentRequests = (lat, long) => {
                 const day = date.getDate()
                 const hours = date.getHours()
                 const minutes = "0" + date.getMinutes()
-
                 return ({
                     date: month + '-' + day + '-' + hours + ':' + minutes.substr(-2),
                     temp: item.temp
                 })
             })
-            return res(transformedHourly)
+            return res({
+                currentWeather: currentWeather,
+                hourly: transformedHourly
+            })
         })).catch(errors => {
             rej(errors)
         })
