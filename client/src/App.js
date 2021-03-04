@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import Search from './Components/Search'
-import { Alert } from 'react-bootstrap'
+import { Alert, Button, Col, Container, Row } from 'react-bootstrap'
 import axios from 'axios'
 import './App.css';
 
 const API_URL = 'http://localhost:8002/api/weather/'
 
 function App() {
-  const [selectedCity, setSelectedCity] = useState('')
+  const [selectedCity, setSelectedCity] = useState({})
   const [cityWeatherData, setCityWeatherData] = useState({})
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(false)
+  const [errorShow, setErrorShow] = useState(false)
 
-  const setCityFromResults = (selectedCity) => {
+  const setCityFromSearch = (selectedCity) => {
     setSelectedCity(selectedCity)
   }
 
@@ -21,9 +22,11 @@ function App() {
     } else {
       setShow(false)
       axios.get(API_URL + `${selectedCity.lat}-${selectedCity.lon}`)
-      .then(({ data }) => {
+        .then(({ data }) => {
           setCityWeatherData(data)
-      })
+        }).catch(err => {
+          setErrorShow(true)
+        })
     }
   }
 
@@ -31,13 +34,26 @@ function App() {
     <React.Fragment>
       {show
         ? <Alert variant="danger" onClose={() => setShow(false)} dismissible>
-          <Alert.Heading>Please select a city before submitting!</Alert.Heading>
+          <p>Please select a city before submitting!</p>
         </Alert>
         : <div></div>}
-      <Search
-        citySelection={setCityFromResults}
-        getCityWeatherData={getCityWeatherData}
-      />
+      {errorShow
+        ? <Alert variant="danger" onClose={() => setShow(false)} dismissible>
+          <p>Error connecting to server, please try again later</p>
+        </Alert>
+        : <div></div>}
+      <Container>
+        <Row>
+          <Search
+            setCityFromSearch={setCityFromSearch}
+          />
+          <Button
+            onClick={getCityWeatherData}
+          >
+            Submit
+          </Button>
+        </Row>
+      </Container>
     </React.Fragment>
   )
 }
