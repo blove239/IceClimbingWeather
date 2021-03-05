@@ -3,4 +3,4 @@ client/.env
 
 server/node_modules/
 server/.env
-server/data.db
+server/db/data.db

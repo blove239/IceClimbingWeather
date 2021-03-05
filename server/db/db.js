@@ -2,7 +2,7 @@ const nedb = require('nedb')
 const fs = require('fs')
 const cityList = require('./cityListNA.json')
 
-const DB_PATH = process.env.DB_PATH || "data.db"
+const DB_PATH = process.env.DB_PATH ||'./db/data.db'
 
 const db = new nedb({ filename: DB_PATH, autoload: true });
 

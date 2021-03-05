@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Typeahead, withAsync } from 'react-bootstrap-typeahead'
 import axios from 'axios'
 
@@ -6,17 +6,18 @@ const AsyncTypeahead = withAsync(Typeahead)
 
 const API_URL = 'http://localhost:8002/api/city/'
 
-const Search = ({setCityFromSearch}) => {
+const Search = ({ setCityFromSearch }) => {
     const [isLoading, setIsLoading] = useState(false)
     const [options, setOptions] = useState([])
     const [selectedCity, setSelectedCity] = useState({})
 
-    setCityFromSearch(selectedCity)
+    useEffect(() => {
+        setCityFromSearch(selectedCity)
+    }, [selectedCity])
 
     return (
         <AsyncTypeahead
             id='city-search-field'
-            promptText='Enter city name...'
             isLoading={isLoading}
             useCache={false}
             filterBy={() => true}

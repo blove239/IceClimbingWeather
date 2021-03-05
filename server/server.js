@@ -1,11 +1,11 @@
 const express = require('express')
 const axios = require('axios')
 const morgan = require('morgan')
-const db = require('./db')
+const db = require('./db/db')
 const cors = require('cors')
 require('dotenv').config()
 
-const { DAY, ONE_THOUSAND_MILLISECONDS, THREE_DAYS } = require('./constants')
+const { DAY, ONE_THOUSAND_MILLISECONDS, THREE_DAYS } = require('./utils/constants')
 
 const app = express()
 
@@ -41,6 +41,7 @@ app.get('/api/weather/:lat-:lon', async function (req, res) {
         res.status(500)
     }
 })
+
 
 const concurrentRequests = (lat, long) => {
     return new Promise((res, rej) => {

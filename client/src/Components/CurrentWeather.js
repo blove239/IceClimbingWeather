@@ -1,53 +1,22 @@
 import React from 'react'
-import { ONE_THOUSAND_MILLISECONDS } from '../utils/constants'
-const cardinalDirection = (degrees) => {
-    if (degrees >= 337.5 || degrees < 22.5) {
-        return "N"
-    }
-    if (degrees >= 22.5 || degrees < 67.5) {
-        return "NE"
-    }
-    if (degrees >= 67.5 || degrees < 112.5) {
-        return "E"
-    }
-    if (degrees >= 112.5 || degrees < 157.5) {
-        return "SE"
-    }
-    if (degrees >= 157.5 || degrees < 202.5) {
-        return "S"
-    }
-    if (degrees >= 202.5 || degrees < 247.5) {
-        return "SW"
-    }
-    if (degrees >= 247.5 || degrees < 292.5) {
-        return "W"
-    }
-    if (degrees >= 292.5 || degrees < 337.5) {
-        return "NW"
-    }
-}
-
-const unixDateToHoursMinutes = (unixTime) => {
-    if (unixTime) {
-        const date = new Date(unixTime * ONE_THOUSAND_MILLISECONDS)
-        const hours = date.getHours()
-        const minutes = '0' + date.getMinutes()
-        return (hours + ':' + minutes.substr(-2))
-    } else {
-        return ''
-    }
-}
-
+import { cardinalDirection, unixDateToHoursMinutes } from '../utils/helper'
 
 const CurrentWeather = ({ currentWeatherData }) => {
     return (
         <React.Fragment>
-            <h4>  Current Weather  </h4>
-
+            <h4 className='font-weight-bold'>
+                Current Weather
+            </h4>
+            
             {currentWeatherData.length !== 0 ?
                 <div>
                     <div>
-                        Description: {currentWeatherData.weather[0].description}
+                        <span className='font-weight-bold'>
+                            Description:
+                        </span>
+                        <span className='text-capitalize'>
+                            {' '}{currentWeatherData.weather[0].description}
+                        </span>
                     </div>
                     <img
                         alt={currentWeatherData.weather[0].description}
@@ -58,27 +27,43 @@ const CurrentWeather = ({ currentWeatherData }) => {
                 : <></>
             }
             <div>
-                Temp: {currentWeatherData.temp} °C
+                <span className='font-weight-bold'>
+                    Temp: {' '}
+                </span>
+                {currentWeatherData.temp} °C
             </div>
             <div>
-                Feels like: {currentWeatherData.feels_like} °C
+                <span className='font-weight-bold'>
+                    Feels like: {' '}
+                </span>
+                {currentWeatherData.feels_like} °C
             </div>
             <div>
-                Sunrise: {unixDateToHoursMinutes(currentWeatherData.sunrise)}
+                <span className='font-weight-bold'>
+                    Sunrise: {' '}
+                </span>
+                {unixDateToHoursMinutes(currentWeatherData.sunrise)}
             </div>
             <div>
-                Sunset: {unixDateToHoursMinutes(currentWeatherData.sunset)}
+                <span className='font-weight-bold'>
+                    Sunset: {' '}
+                </span>
+                {unixDateToHoursMinutes(currentWeatherData.sunset)}
             </div>
             <div>
-                Wind: {currentWeatherData.wind_speed} {'km/h '}
+                <span className='font-weight-bold'>
+                    Wind: {' '}
+                </span>
+                {currentWeatherData.wind_speed} {'km/h '}
                 {cardinalDirection(currentWeatherData.wind_deg)}
             </div>
             <div>
-                UV Index: {currentWeatherData.uvi}
+                <span className='font-weight-bold'>
+                    UV Index {' '}
+                </span>
+                {currentWeatherData.uvi}
             </div>
-
-
-        </React.Fragment >
+        </React.Fragment>
     )
 }
 
