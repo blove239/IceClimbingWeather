@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import About from './Components/About'
 import CurrentWeather from './Components/CurrentWeather'
 import Footer from './Components/Footer'
 import LineChart from './Components/LineChart'
@@ -20,12 +21,13 @@ function App() {
   }
 
   const getCityWeatherData = () => {
-    if (!selectedCity){
+    if (!selectedCity) {
       setHourlyWeatherData([])
       setCurrentWeatherData([])
     } else {
       axios.get(API_URL + `${selectedCity.lat}-${selectedCity.lon}`)
         .then(({ data }) => {
+          setErrorShow(false)
           setHourlyWeatherData(data.hourly)
           setCurrentWeatherData(data.current)
         }).catch(err => {
@@ -37,25 +39,24 @@ function App() {
   return (
     <React.Fragment>
       <Title />
+      <About />
       {errorShow
         ? <Alert variant='danger' onClose={() => setErrorShow(false)} dismissible>
           <p>Error connecting to server, please try again later</p>
         </Alert>
-        : <div></div>}
+        : <></>}
       <Container>
-        <Row className='d-flex justify-content-center'>
+        <Row className='d-flex justify-content-center mb-4'>
           <Search setCityFromSearch={setCityFromSearch} />
-          <Button
-            onClick={getCityWeatherData}
-          >
+          <Button onClick={getCityWeatherData}>
             Get Results
           </Button>
         </Row>
         <Row>
-          <Col className='col-9'>
+          <Col className='col-md-9 order-lg-1'>
             <LineChart hourlyWeather={hourlyWeatherData} />
           </Col>
-          <Col className='col-3'>
+          <Col className='col-md-3 order-lg-12'>
             <CurrentWeather currentWeatherData={currentWeatherData} />
           </Col>
         </Row>

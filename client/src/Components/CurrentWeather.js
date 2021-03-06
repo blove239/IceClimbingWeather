@@ -4,10 +4,9 @@ import { cardinalDirection, unixDateToHoursMinutes } from '../utils/helper'
 const CurrentWeather = ({ currentWeatherData }) => {
     return (
         <React.Fragment>
-            <h4 className='font-weight-bold'>
+            <h4 className='font-weight-bold text-center'>
                 Current Weather
             </h4>
-            
             {currentWeatherData.length !== 0 ?
                 <div>
                     <div>
@@ -19,10 +18,10 @@ const CurrentWeather = ({ currentWeatherData }) => {
                         </span>
                     </div>
                     <img
+                    className='rounded mx-auto d-block'
                         alt={currentWeatherData.weather[0].description}
                         src={`http://openweathermap.org/img/wn/${currentWeatherData.weather[0].icon}@2x.png`}
-                    >
-                    </img>
+                    />
                 </div>
                 : <></>
             }
@@ -30,13 +29,15 @@ const CurrentWeather = ({ currentWeatherData }) => {
                 <span className='font-weight-bold'>
                     Temp: {' '}
                 </span>
-                {currentWeatherData.temp} °C
+                {isNaN(currentWeatherData.temp) ? '' :
+                    Math.round(currentWeatherData.temp)} °C
             </div>
             <div>
                 <span className='font-weight-bold'>
                     Feels like: {' '}
                 </span>
-                {currentWeatherData.feels_like} °C
+                {isNaN(currentWeatherData.feels_like) ? '' :
+                    Math.round(currentWeatherData.feels_like)} °C
             </div>
             <div>
                 <span className='font-weight-bold'>
@@ -54,7 +55,8 @@ const CurrentWeather = ({ currentWeatherData }) => {
                 <span className='font-weight-bold'>
                     Wind: {' '}
                 </span>
-                {currentWeatherData.wind_speed} {'km/h '}
+                {isNaN(currentWeatherData.wind_speed) ? '' :
+                    Math.round(currentWeatherData.wind_speed)} {' km/h '}
                 {cardinalDirection(currentWeatherData.wind_deg)}
             </div>
             <div>

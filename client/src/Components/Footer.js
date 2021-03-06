@@ -9,9 +9,8 @@ const Footer = () => {
       className='mr-1 text-dark'
       href='https://github.com/blove239/IceClimbingWeather'>
         <FontAwesomeIcon icon={faGithub} />
-        {' '}
       </a>
-      / Made by {' '}
+      / Made by
       <a 
       className='ml-1 text-dark'
       href='https://brandonlove.ca'>Brandon Love.</a>

@@ -1,11 +1,7 @@
 import React from 'react'
 import { Line } from 'react-chartjs-2'
 
-
-
-
 const LineChart = ({ hourlyWeather }) => {
-
     const data = {
         labels: hourlyWeather.map(obj => {
             return (obj.date)
@@ -33,8 +29,7 @@ const LineChart = ({ hourlyWeather }) => {
                 },
                
                 ticks: {
-                    // Include a dollar sign in the ticks
-                    callback: function(value, index, values) {
+                    callback: (value, index, values) => {
                         return value + ' °C';
                     }
                 }
