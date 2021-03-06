@@ -1,19 +1,29 @@
 const express = require('express')
 const axios = require('axios')
+const redis = require('redis')
 const morgan = require('morgan')
 const db = require('./db/db')
 const cors = require('cors')
+const { DAY, ONE_HOUR_IN_SECONDS, ONE_THOUSAND_MILLISECONDS, THREE_DAYS } = require('./utils/constants')
 require('dotenv').config()
 
-const { DAY, ONE_THOUSAND_MILLISECONDS, THREE_DAYS } = require('./utils/constants')
+const corsOptions = {
+    origin: process.env.HOMEPAGE,
+    optionsSuccessStatus: 200
+}
+
+const port_redis = process.env.PORT || 6379
+const PORT = process.env.port || 8002
+
+const redis_client = redis.createClient(port_redis)
 
 const app = express()
 
-app.use(cors())
-
-const PORT = process.env.port || 8002
+app.use(cors(corsOptions))
 
 let currentUnixTime = Math.floor(Date.now() / ONE_THOUSAND_MILLISECONDS)
+
+let unixTimeLastHour = Math.floor(currentUnixTime / ONE_HOUR_IN_SECONDS) * ONE_HOUR_IN_SECONDS
 
 app.use(
     morgan(
@@ -26,41 +36,56 @@ app.listen(PORT, () => {
 });
 
 app.get('/api/city/:city', async function (req, res) {
-    // need to validate inputs
     let data = await db.findCity(req.params.city)
     res.status(200).send(data)
 })
 
-app.get('/api/weather/:lat-:lon', async function (req, res) {
-    // need to validate inputs
+const checkCache = (req, res, next) => {
+    const { lat, lon } = req.params
+
+    const key = lat + lon + '-' + unixTimeLastHour
+    redis_client.get(key, (err, data) => {
+        if (err) {
+            console.log(err)
+            res.status(500).send(err)
+        }
+        if (data != null) {
+            res.send(data);
+        } else {
+            next()
+        }
+    })
+}
+
+app.get('/api/weather/:lat-:lon', checkCache, async function (req, res) {
     try {
-        const data = await concurrentRequests(req.params.lat, req.params.lon)
+        const { lat, lon } = req.params
+        const key = lat + lon + '-' + unixTimeLastHour
+
+        const data = await concurrentRequests(lat, lon)
+        redis_client.setex(key, 3600, JSON.stringify(data))
+        
         res.status(200).json(data)
     } catch (err) {
-        // expand on error so client can respond appropriately 
         res.status(500)
     }
 })
 
-
-const concurrentRequests = (lat, long) => {
+const concurrentRequests = (lat, lon) => {
     return new Promise((res, rej) => {
-        let hourly = []
-        let currentWeather = []
         let requestList = []
         for (let i = 0; i < THREE_DAYS; i++) {
-            let request = `http://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${lat}&lon=${long}&units=metric&dt=${currentUnixTime - (DAY * i)}&appid=${process.env.API_KEY}`
+            let request = `http://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${lat}&lon=${lon}&units=metric&dt=${unixTimeLastHour - (DAY * i)}&appid=${process.env.API_KEY}`
             requestList.push(axios.get(request))
         }
 
         axios.all(requestList).then(axios.spread((...responses) => {
-
             const responseOne = responses[0].data
             const responseTwo = responses[1].data
             const responseThree = responses[2].data
 
-            hourly = responseOne.hourly.concat(responseTwo.hourly).concat(responseThree.hourly)
-            current = responseOne.current
+            let hourly = responseOne.hourly.concat(responseTwo.hourly).concat(responseThree.hourly)
+            let current = responseOne.current
 
             //dt === unix time formatted date time
             hourly.sort((a, b) => (a.dt > b.dt) ? 1 : ((b.dt > a.dt) ? -1 : 0))

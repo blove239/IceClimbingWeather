@@ -53,10 +53,10 @@ function App() {
           </Button>
         </Row>
         <Row>
-          <Col className='col-md-9 order-lg-1'>
+          <Col className='col-md-9'>
             <LineChart hourlyWeather={hourlyWeatherData} />
           </Col>
-          <Col className='col-md-3 order-lg-12'>
+          <Col className='col-md-3'>
             <CurrentWeather currentWeatherData={currentWeatherData} />
           </Col>
         </Row>
