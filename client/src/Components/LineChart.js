@@ -25,7 +25,7 @@ const LineChart = ({ hourlyWeather }) => {
             yAxes: [{
                 scaleLabel: {
                     display: true,
-                    labelString: "Temperature °C"
+                    labelString: 'Temperature °C'
                 },
                
                 ticks: {

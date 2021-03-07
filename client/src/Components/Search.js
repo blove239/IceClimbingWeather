@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Typeahead, withAsync } from 'react-bootstrap-typeahead'
 import axios from 'axios'
+import 'react-bootstrap-typeahead/css/Typeahead.css'
 
 const AsyncTypeahead = withAsync(Typeahead)
 
@@ -10,24 +11,30 @@ const Search = ({ setCityFromSearch }) => {
     const [isLoading, setIsLoading] = useState(false)
     const [options, setOptions] = useState([])
 
+    const handleSearch = (query) => {
+        setIsLoading(true)
+        axios.get(API_URL + `${query}`)
+            .then(({ data }) => {
+                setIsLoading(false)
+                setOptions(data)
+            }).catch(err => {
+                console.log(err)
+                setIsLoading(true)
+            })
+    }
+
     return (
         <AsyncTypeahead
+            placeHolder='Enter city name...'
+            filterBy={() => true}
             id='city-search-field'
             isLoading={isLoading}
+            labelKey={'city'}
             useCache={false}
-            filterBy={() => true}
-            labelKey={option => option.city}
             onChange={selected => {
                 setCityFromSearch(selected[0])
             }}
-            onSearch={query => {
-                setIsLoading(true)
-                axios.get(API_URL + `${query}`)
-                    .then(({ data }) => {
-                        setIsLoading(false)
-                        setOptions(data)
-                    })
-            }}
+            onSearch={handleSearch}
             options={options}
         />
     )

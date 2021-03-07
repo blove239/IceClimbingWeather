@@ -7,6 +7,13 @@ const CurrentWeather = ({ currentWeatherData }) => {
             <h4 className='font-weight-bold text-center'>
                 Current Weather
             </h4>
+            <div>
+                <span className='font-weight-bold'>
+                    Time: {' '}
+                </span>
+                {isNaN(currentWeatherData.dt) ? '' :
+                    unixDateToHoursMinutes(currentWeatherData.dt)}
+            </div>
             {currentWeatherData.length !== 0 ?
                 <div>
                     <div>
@@ -18,7 +25,7 @@ const CurrentWeather = ({ currentWeatherData }) => {
                         </span>
                     </div>
                     <img
-                    className='rounded mx-auto d-block'
+                        className='rounded mx-auto d-block'
                         alt={currentWeatherData.weather[0].description}
                         src={`http://openweathermap.org/img/wn/${currentWeatherData.weather[0].icon}@2x.png`}
                     />

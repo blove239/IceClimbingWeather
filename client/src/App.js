@@ -47,8 +47,12 @@ function App() {
         : <></>}
       <Container>
         <Row className='d-flex justify-content-center mb-4'>
-          <Search setCityFromSearch={setCityFromSearch} />
-          <Button onClick={getCityWeatherData}>
+          <Search
+            className='mr-2'
+            setCityFromSearch={setCityFromSearch} />
+          <Button
+            className='ml-2'
+            onClick={getCityWeatherData}>
             Get Results
           </Button>
         </Row>

@@ -2,28 +2,28 @@ import { ONE_THOUSAND_MILLISECONDS } from './constants'
 
 export const cardinalDirection = (degrees) => {
     if (degrees >= 337.5 || degrees < 22.5) {
-        return "N"
+        return 'NE'
     }
     if (degrees >= 22.5 || degrees < 67.5) {
-        return "NE"
+        return 'NE'
     }
     if (degrees >= 67.5 || degrees < 112.5) {
-        return "E"
+        return 'E'
     }
     if (degrees >= 112.5 || degrees < 157.5) {
-        return "SE"
+        return 'SE'
     }
     if (degrees >= 157.5 || degrees < 202.5) {
-        return "S"
+        return 'S'
     }
     if (degrees >= 202.5 || degrees < 247.5) {
-        return "SW"
+        return 'SW'
     }
     if (degrees >= 247.5 || degrees < 292.5) {
-        return "W"
+        return 'W'
     }
     if (degrees >= 292.5 || degrees < 337.5) {
-        return "NW"
+        return 'NW'
     }
 }
 
@@ -37,4 +37,3 @@ export const unixDateToHoursMinutes = (unixTime) => {
         return ''
     }
 }
-

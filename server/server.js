@@ -63,10 +63,11 @@ app.get('/api/weather/:lat-:lon', checkCache, async function (req, res) {
         const key = lat + lon + '-' + unixTimeLastHour
 
         const data = await concurrentRequests(lat, lon)
-        redis_client.setex(key, 3600, JSON.stringify(data))
+        redis_client.setex(key, ONE_HOUR_IN_SECONDS, JSON.stringify(data))
         
         res.status(200).json(data)
     } catch (err) {
+        console.log(err)
         res.status(500)
     }
 })
