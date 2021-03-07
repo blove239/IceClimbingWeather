@@ -4,10 +4,10 @@ The is v0.9 of the Ice climbing weather tool. The idea is to give ice climbers t
 
 Later versions will include a better UI and a simple algorithm to make predictions of local ice conditions.
 
-![Ice Climbing Weather Screenshot(]https://res.cloudinary.com/dcqt5zx6z/image/upload/v1615090828/Screenshots%20for%20projects/ice_climb_weather_tool_xy2mvh.png)
+![Ice Climbing Weather Screenshot](https://res.cloudinary.com/dcqt5zx6z/image/upload/v1615090828/Screenshots%20for%20projects/ice_climb_weather_tool_xy2mvh.png)
 
 ## Installation
-
+```
 git clone https://github.com/blove239/iceclimbweather.git
 cd iceclimbweather
 cd client
@@ -15,18 +15,20 @@ npm install
 cd ..
 cd server
 npm install
+```
 
 ## Development
+```
 For both client and server:
 npm start
+```
 
 ## Deployment
+```
 Client:
 npm run build
+```
 
 ## Licence
 
 [MIT](https://choosealicense.com/licenses/mit/)
-
-
-
