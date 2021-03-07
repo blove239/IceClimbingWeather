@@ -5,7 +5,7 @@ import 'react-bootstrap-typeahead/css/Typeahead.css'
 
 const AsyncTypeahead = withAsync(Typeahead)
 
-const API_URL = 'http://localhost:8002/api/city/'
+const API_URL = process.env.REACT_APP_CITY_SEARCH
 
 const Search = ({ setCityFromSearch }) => {
     const [isLoading, setIsLoading] = useState(false)

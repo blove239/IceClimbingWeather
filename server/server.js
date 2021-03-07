@@ -13,9 +13,13 @@ const corsOptions = {
 }
 
 const port_redis = process.env.PORT || 6379
+const password_redis = process.env.PASSWORD_REDIS
 const PORT = process.env.port || 8002
 
-const redis_client = redis.createClient(port_redis)
+const redis_client = redis.createClient({
+    port: port_redis,
+    password: password_redis
+})
 
 const app = express()
 
@@ -64,7 +68,7 @@ app.get('/api/weather/:lat-:lon', checkCache, async function (req, res) {
 
         const data = await concurrentRequests(lat, lon)
         redis_client.setex(key, ONE_HOUR_IN_SECONDS, JSON.stringify(data))
-        
+
         res.status(200).json(data)
     } catch (err) {
         console.log(err)

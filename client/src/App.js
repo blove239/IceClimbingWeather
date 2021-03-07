@@ -8,7 +8,7 @@ import Title from './Components/Title'
 import { Alert, Button, Col, Container, Row } from 'react-bootstrap'
 import axios from 'axios'
 
-const API_URL = 'http://localhost:8002/api/weather/'
+const API_URL = process.env.REACT_APP_WEATHER_DATA
 
 function App() {
   const [selectedCity, setSelectedCity] = useState({})
