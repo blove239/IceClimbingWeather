@@ -66,12 +66,6 @@ const CurrentWeather = ({ currentWeatherData }) => {
                     Math.round(currentWeatherData.wind_speed)} {' km/h '}
                 {cardinalDirection(currentWeatherData.wind_deg)}
             </div>
-            <div>
-                <span className='font-weight-bold'>
-                    UV Index {' '}
-                </span>
-                {currentWeatherData.uvi}
-            </div>
         </React.Fragment>
     )
 }
