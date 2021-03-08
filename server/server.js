@@ -54,7 +54,7 @@ const checkCache = (req, res, next) => {
             res.status(500).send(err)
         }
         if (data != null) {
-            res.send(data);
+            res.send(data)
         } else {
             next()
         }
@@ -64,15 +64,18 @@ const checkCache = (req, res, next) => {
 app.get('/api/weather/:lat-:lon', checkCache, async function (req, res) {
     try {
         const { lat, lon } = req.params
-        const key = lat + lon + '-' + unixTimeLastHour
+
+        await db.validateLatLon(lat,lon)
 
         const data = await concurrentRequests(lat, lon)
+
+        const key = lat + lon + '-' + unixTimeLastHour
         redis_client.setex(key, ONE_HOUR_IN_SECONDS, JSON.stringify(data))
 
         res.status(200).json(data)
     } catch (err) {
         console.log(err)
-        res.status(500)
+        res.status(500).send()
     }
 })
 
