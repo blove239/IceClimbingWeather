@@ -40,8 +40,16 @@ app.listen(PORT, () => {
 });
 
 app.get('/api/city/:city', async function (req, res) {
-    let data = await db.findCity(req.params.city)
-    res.status(200).send(data)
+    try {
+        let { city } = req.params
+
+        let data = await db.findCity(city)
+        
+        res.status(200).send(data)
+    } catch (err) {
+        console.log(err)
+        res.status(500).send(err)
+    }
 })
 
 const checkCache = (req, res, next) => {
@@ -65,7 +73,7 @@ app.get('/api/weather/:lat-:lon', checkCache, async function (req, res) {
     try {
         const { lat, lon } = req.params
 
-        await db.validateLatLon(lat,lon)
+        await db.validateLatLon(lat, lon)
 
         const data = await concurrentRequests(lat, lon)
 
@@ -75,7 +83,7 @@ app.get('/api/weather/:lat-:lon', checkCache, async function (req, res) {
         res.status(200).json(data)
     } catch (err) {
         console.log(err)
-        res.status(500).send()
+        res.status(400).send(err)
     }
 })
 
