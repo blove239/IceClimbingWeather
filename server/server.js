@@ -25,9 +25,11 @@ const app = express()
 
 app.use(cors(corsOptions))
 
-let currentUnixTime = Math.floor(Date.now() / ONE_THOUSAND_MILLISECONDS)
-
-let unixTimeLastHour = Math.floor(currentUnixTime / ONE_HOUR_IN_SECONDS) * ONE_HOUR_IN_SECONDS
+const unixTimeLastHour = () => {
+    let currentUnixTime = Math.floor(Date.now() / ONE_THOUSAND_MILLISECONDS)
+    
+    return Math.floor(currentUnixTime / ONE_HOUR_IN_SECONDS) * ONE_HOUR_IN_SECONDS
+}
 
 app.use(
     morgan(
@@ -55,7 +57,7 @@ app.get('/api/city/:city', async function (req, res) {
 const checkCache = (req, res, next) => {
     const { lat, lon } = req.params
 
-    const key = lat + lon + '-' + unixTimeLastHour
+    const key = lat + lon + '-' + unixTimeLastHour()
     redis_client.get(key, (err, data) => {
         if (err) {
             console.log(err)
@@ -91,7 +93,7 @@ const concurrentRequests = (lat, lon) => {
     return new Promise((res, rej) => {
         let requestList = []
         for (let i = 0; i < THREE_DAYS; i++) {
-            let request = `http://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${lat}&lon=${lon}&units=metric&dt=${unixTimeLastHour - (DAY * i)}&appid=${process.env.API_KEY}`
+            let request = `http://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${lat}&lon=${lon}&units=metric&dt=${unixTimeLastHour() - (DAY * i)}&appid=${process.env.API_KEY}`
             requestList.push(axios.get(request))
         }
 
