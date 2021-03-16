@@ -4,15 +4,14 @@ import { faIcicles } from '@fortawesome/free-solid-svg-icons'
 
 const Title = () => {
     return (
-        <div className='d-flex justify-content-center mt-5 mb-2'>
-            <h2>
+        <h2 className='text-center mt-5 mb-2'>
             <FontAwesomeIcon
-                className='mr-3'
-                icon={faIcicles} />
+                className='mr-2'
+                icon={faIcicles}
+            />
                 Ice Climbing Weather
             <span className='ml-2 font-weight-bold'>Tool</span>
-            </h2>
-        </div>
+        </h2>
     )
 }
 

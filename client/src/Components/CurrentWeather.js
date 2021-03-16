@@ -1,9 +1,10 @@
 import React from 'react'
 import { cardinalDirection, unixDateToHoursMinutes } from '../utils/helper'
+import '../css/currentWeather.css'
 
 const CurrentWeather = ({ currentWeatherData }) => {
     return (
-        <React.Fragment>
+        <div className='neu-currentWeather'>
             <h4 className='font-weight-bold text-center'>
                 Current Weather
             </h4>
@@ -66,7 +67,7 @@ const CurrentWeather = ({ currentWeatherData }) => {
                     Math.round(currentWeatherData.wind_speed)} {' km/h '}
                 {cardinalDirection(currentWeatherData.wind_deg)}
             </div>
-        </React.Fragment>
+        </div>
     )
 }
 

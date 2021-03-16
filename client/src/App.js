@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import About from './Components/About'
 import CurrentWeather from './Components/CurrentWeather'
 import Footer from './Components/Footer'
 import LineChart from './Components/LineChart'
@@ -7,6 +6,7 @@ import Search from './Components/Search'
 import Title from './Components/Title'
 import { Alert, Button, Col, Container, Row } from 'react-bootstrap'
 import axios from 'axios'
+import './App.css'
 
 const API_URL = process.env.REACT_APP_WEATHER_DATA
 
@@ -39,7 +39,6 @@ function App() {
   return (
     <React.Fragment>
       <Title />
-      <About />
       {errorShow
         ? <Alert variant='danger' onClose={() => setErrorShow(false)} dismissible>
           <p>Error connecting to server, please try again later</p>
@@ -47,21 +46,26 @@ function App() {
         : <></>}
       <Container>
         <Row className='d-flex justify-content-center mb-4'>
-          <Search
-            className='mr-2'
-            setCityFromSearch={setCityFromSearch} />
-          <Button
-            className='ml-2'
-            onClick={getCityWeatherData}>
-            Get Results
+          <div className='d-flex neu-search'>
+            <Search
+              className='mr-2'
+              setCityFromSearch={setCityFromSearch}
+            />
+            <Button
+              className='ml-2'
+              onClick={getCityWeatherData}>
+              Get Results
           </Button>
+          </div>
         </Row>
         <Row>
           <Col className='col-md-9'>
             <LineChart hourlyWeather={hourlyWeatherData} />
           </Col>
           <Col className='col-md-3'>
-            <CurrentWeather currentWeatherData={currentWeatherData} />
+            <CurrentWeather
+              className='noo'
+              currentWeatherData={currentWeatherData} />
           </Col>
         </Row>
       </Container>

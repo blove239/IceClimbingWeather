@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { Chart, Line } from 'react-chartjs-2'
-import { faSun } from '@fortawesome/free-solid-svg-icons'
 import day from '../images/day.png'
 import night from '../images/night.png'
+import '../css/lineChart.css'
 
 const LineChart = ({ hourlyWeather }) => {
     const data = {
@@ -17,8 +17,8 @@ const LineChart = ({ hourlyWeather }) => {
                     return (obj.temp)
                 }),
                 fill: false,
-                backgroundColor: 'rgb(255, 99, 132)',
-                borderColor: 'rgba(255, 99, 132, 0.2)',
+                backgroundColor: 'rgb(0, 99, 132)',
+                borderColor: 'rgba(0, 99, 132, 0.8)',
             },
         ],
     }
@@ -77,10 +77,12 @@ const LineChart = ({ hourlyWeather }) => {
 
 
     return (
-        <Line
-            data={data}
-            options={options}
-        />
+        <div className='neu-lineChart'>
+            <Line
+                data={data}
+                options={options}
+            />
+        </div>
     )
 }
 
