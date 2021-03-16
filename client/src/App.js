@@ -40,20 +40,22 @@ function App() {
     <React.Fragment>
       <Title />
       {errorShow
-        ? <Alert variant='danger' onClose={() => setErrorShow(false)} dismissible>
+        ?
+        <Alert variant='danger' onClose={() => setErrorShow(false)} dismissible>
           <p>Error connecting to server, please try again later</p>
         </Alert>
         : <></>}
       <Container>
-        <Row className='d-flex justify-content-center mb-4'>
-          <div className='d-flex neu-search'>
+        <Row className='d-flex justify-content-center'>
+          <div className='d-flex neu-search my-4'>
             <Search
               className='mr-2'
               setCityFromSearch={setCityFromSearch}
             />
             <Button
               className='ml-2'
-              onClick={getCityWeatherData}>
+              onClick={getCityWeatherData}
+            >
               Get Results
           </Button>
           </div>
@@ -63,9 +65,7 @@ function App() {
             <LineChart hourlyWeather={hourlyWeatherData} />
           </Col>
           <Col className='col-md-3'>
-            <CurrentWeather
-              className='noo'
-              currentWeatherData={currentWeatherData} />
+            <CurrentWeather currentWeatherData={currentWeatherData} />
           </Col>
         </Row>
       </Container>

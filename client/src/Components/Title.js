@@ -4,7 +4,7 @@ import { faIcicles } from '@fortawesome/free-solid-svg-icons'
 
 const Title = () => {
     return (
-        <h2 className='text-center mt-5 mb-2'>
+        <h2 className='text-center mt-5 mb-5'>
             <FontAwesomeIcon
                 className='mr-2'
                 icon={faIcicles}
