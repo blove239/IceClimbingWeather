@@ -32,7 +32,7 @@ const LineChart = ({ hourlyWeather }) => {
                 },
                 ticks: {
                     callback: (value) => {
-                        return value;
+                        return value
                     }
                 }
             }],
@@ -56,25 +56,24 @@ const LineChart = ({ hourlyWeather }) => {
         return () => {
             Chart.pluginService.register({
                 afterDraw: chart => {
-                    var ctx = chart.chart.ctx;
-                    var xAxis = chart.scales['x-axis-0'];
-                    var yAxis = chart.scales['y-axis-0'];
+                    var ctx = chart.chart.ctx
+                    var xAxis = chart.scales['x-axis-0']
+                    var yAxis = chart.scales['y-axis-0']
                     xAxis.ticks.forEach((value, index) => {
-                        var x = xAxis.getPixelForTick(index);
-                        var image = new Image();
-                        if (value && value.endsWith('night')) {
+                        var x = xAxis.getPixelForTick(index)
+                        var image = new Image()
+                        if (value && value === 'night') {
                             image.src = night
-                            ctx.drawImage(image, x - 15, yAxis.bottom + 10, 30, 30);
-                        } if (value && value.endsWith('day')) {
+                            ctx.drawImage(image, x - 15, yAxis.bottom + 10, 30, 30)
+                        } if (value && value === 'day') {
                             image.src = day
-                            ctx.drawImage(image, x - 15, yAxis.bottom + 10, 30, 30);
+                            ctx.drawImage(image, x - 15, yAxis.bottom + 10, 30, 30)
                         }
-                    });
+                    })
                 }
-            });
+            })
         }
     })
-
 
     return (
         <div className='neu-lineChart'>

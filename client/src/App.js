@@ -60,11 +60,11 @@ function App() {
           </Button>
           </div>
         </Row>
-        <Row>
-          <Col className='col-md-9'>
+        <Row className='d-flex justify-content-center'>
+          <Col className='col-sm-12 col-lg-9 my-3'>
             <LineChart hourlyWeather={hourlyWeatherData} />
           </Col>
-          <Col className='col-md-3'>
+          <Col className='col-sm-6 col-lg-3 my-3'>
             <CurrentWeather currentWeatherData={currentWeatherData} />
           </Col>
         </Row>
